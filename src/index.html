@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ua">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SYNEVO</title>
+    <!-- <script src="./node_modules/jspdf/dist/jspdf.umd.min.js" type="module"></script> -->
+    <!-- <script src="./js/svg.js" type="module"></script> -->
+    <style>
+        .setupLayer,
+        .synevoLayer {
+            display: none;
+        }
+    </style>
+    <script src="./index.js" type="module" defer></script>
+</head>
+
+<body>
+    <div class="setupLayer">
+        <div>
+            <!-- <nobr> -->
+            <span for="lastName">Фамилия.......:</span>
+            <input type="text" name="lastName" id="lastName" placeholder="lastName">
+            <!-- </nobr> -->
+        </div>
+        <div>
+            <span for="firstName">Имя...........: </span>
+            <input type="text" name="firstName" id="firstName" placeholder="firstName">
+        </div>
+        <div>
+            <span for="secondName">Отчество......:</span>
+            <input type="text" name="secondName" id="secondName" placeholder="secondName">
+        </div>
+        <div>
+            <span for="secondName">
+                <nobr>Дата рождения.:</nobr>
+            </span>
+            <input type="date" name="birthDate" id="birthDate">
+        </div>
+
+        <input type="checkbox" name="gender" id="gender">
+        <label for="gender">Male</label>
+        <input type="button" value="printPdf" id="printPdf">
+        <label for="printPdf">SAVE TO PDF</label>
+        <!-- <button id="printPdf">SAVE PDF</button> -->
+    </div>
+
+    <div class="synevoLayer">
+        <div class="header">
+            <div class="leftNav">
+                <span id="logo" class="header__Logo"></span>
+                <!-- <span class="header__location"></span> -->
+            </div>
+            <div class="rightNav">
+                <div id="dd" class="dropDown">
+                    <span class="dropDown__elem"></span>
+                    <span class="dropDown__elem"></span>
+                    <span class="dropDown__elem"></span>
+                </div>
+            </div>
+        </div>
+        <p>Дякуємо за звернення.</p>
+        <p>За вашим посиланням<br>знайдено 1 разультатів.</p>
+        <span id="pdfLink"></span>
+        <p>З повагою,<br>лабораторія «Сінево»</p>
+        <!-- <img src="./synevo-logo.svg" alt=""> -->
+    </div>
+
+</body>
+
+</html>

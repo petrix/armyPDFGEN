@@ -1,0 +1,24 @@
+{
+	"name": "armypdfgen",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "vite --force --open",
+		"dev": "vite --force",
+		"build": "vite build"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@vitejs/plugin-legacy": "^8.2.3",
+		"jspdf": "^4.2.1",
+		"qrcode": "^1.5.4",
+		"sass": "^1.105.1",
+		"vite": "^8.3.4",
+		"vite-plugin-favicon2": "^1.1.5"
+	}
+}
