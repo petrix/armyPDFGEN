@@ -130,10 +130,36 @@ body {
             font-size: 2rem;
             width: 100%;
         }
+
+        &>input[type="time"] {
+            font-family: "Jura";
+            font-weight: bold;
+            font-size: 2rem;
+            width: 100%;
+            background-color: #111;
+            text-decoration: none;
+            border: none;
+            color: white;
+            border: 2px solid #fff;
+            border-radius: 0.2em;
+        }
     }
 
 
-
+    &>input[type="button"] {
+        font-family: "Jura";
+        font-weight: bold;
+        font-size: 2rem;
+        width: 80%;
+        max-width: var(--maxWidth);
+        cursor: crosshair;
+        background-color: #111;
+        text-decoration: none;
+        border: none;
+        color: white;
+        border: 2px solid #fff;
+        border-radius: 0.2em;
+    }
 
     &>input[type="button"]+label {
         font-family: "Jura";
@@ -141,6 +167,7 @@ body {
         font-size: 2rem;
         width: 80%;
         max-width: var(--maxWidth);
+        cursor: pointer;
     }
 }
 

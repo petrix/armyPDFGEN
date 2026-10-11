@@ -1,6 +1,5 @@
 input[type="checkbox"],
-input[type="radio"],
-input[type="button"] {
+input[type="radio"] {
     position: absolute;
     opacity: 0;
     z-index: -1;
@@ -18,9 +17,11 @@ input[type="date"] {
     color: #fff;
     border: 2px solid #fff;
     background-color: #111;
+
     &:focus {
         background-color: #222;
     }
+
     &.validValue {
         border: 2px solid #aaa;
         // background-color: #200;
@@ -101,6 +102,7 @@ label::before {
 input[type="button"]+label {
     background-color: #111;
     width: 80%;
+
     &hover {
         background-color: #222;
     }

@@ -19,7 +19,18 @@ const firstNameField = document.querySelector("#firstName");
 const secondNameField = document.querySelector("#secondName");
 const lastNameField = document.querySelector("#lastName");
 const birthDateField = document.querySelector("#birthDate");
-const genderCheckbox = document.querySelector("#gender");
+const theTitleField = document.querySelector("#theTitle");
+const courseAutorField = document.querySelector("#courseAutor");
+const courseLengthField = document.querySelector("#courseLength");
+
+const inputFieldArr = [firstNameField, secondNameField, lastNameField, birthDateField, theTitleField, courseAutorField, courseLengthField];
+inputFieldArr.forEach((field) => {
+	field.oninput = async (e) => {
+		let clientForm = await readClientForm();
+		localStorage.setItem("client", JSON.stringify(clientForm));
+	};
+});
+// const genderCheckbox = document.querySelector("#gender");
 const dropD = document.querySelector("#dd");
 const logo = document.querySelector("#logo");
 // const stampIMG = new Image();
@@ -90,9 +101,11 @@ function readLocalStorage() {
 		let localData = localStorage.getItem("client");
 		if (localData) {
 			let cli = JSON.parse(decodeURIComponent(localData));
+			console.log(cli);
 			firstNameField.value = cli.firstName;
 			secondNameField.value = cli.secondName;
 			lastNameField.value = cli.lastName;
+			theTitleField.value = cli.theTitle;
 			// console.log(cli.birthDate)
 			let birthDate = [];
 			let bDate = [];
@@ -110,15 +123,17 @@ function readLocalStorage() {
 			});
 			// console.log(cli.birthDate, bDate)
 			birthDateField.value = bDate;
-
+			courseAutorField.value = cli.courseAutor;
+			courseLengthField.value = cli.courseLength;
 			//
-			if (cli.Gender == "Male") {
-				genderCheckbox.checked = false;
-				document.querySelector("body > div > label").innerText = "Male";
-			} else {
-				genderCheckbox.checked = true;
-				document.querySelector("body > div > label").innerText = "Female";
-			}
+			// if (cli.Gender == "Male") {
+			// 	genderCheckbox.checked = false;
+			// 	document.querySelector("body > div > label").innerText = "Male";
+			// } else {
+			// 	genderCheckbox.checked = true;
+			// 	document.querySelector("body > div > label").innerText = "Female";
+			// }
+
 			resolve(cli);
 		} else {
 			reject();
@@ -135,10 +150,10 @@ dropD.onclick = (e) => {
 };
 logo.onclick = logout;
 document.querySelector("#printPdf").onclick = seveToPDF;
-genderCheckbox.onclick = (e) => {
-	console.log(e.target.checked);
-	genderCheckbox.checked ? (genderCheckbox.labels[0].innerText = "Female") : (genderCheckbox.labels[0].innerText = "Male");
-};
+// genderCheckbox.onclick = (e) => {
+// 	console.log(e.target.checked);
+// 	genderCheckbox.checked ? (genderCheckbox.labels[0].innerText = "Female") : (genderCheckbox.labels[0].innerText = "Male");
+// };
 async function seveToPDF() {
 	let clientForm = await readClientForm();
 	localStorage.setItem("client", JSON.stringify(clientForm));
@@ -152,6 +167,7 @@ function readClientForm() {
 		clientObj.firstName = firstNameField.value;
 		clientObj.secondName = secondNameField.value;
 		clientObj.lastName = lastNameField.value;
+		clientObj.theTitle = theTitleField.value;
 		let birthDate = birthDateField.value;
 		let birthArray = birthDate.split("-").reverse();
 		clientObj.birthDate = [];
@@ -159,7 +175,9 @@ function readClientForm() {
 			// console.log(value)
 			clientObj.birthDate.push(Number(value));
 		});
-		genderCheckbox.checked ? (clientObj.Gender = "Female") : (clientObj.Gender = "Male");
+		clientObj.courseLength = courseLengthField.value;
+		clientObj.courseAutor != "" ? (clientObj.courseAutor = courseAutorField.value) : (clientObj.courseAutor = "");
+		// genderCheckbox.checked ? (clientObj.Gender = "Female") : (clientObj.Gender = "Male");
 		clientObj.rndm = Math.floor(Math.random() * 9);
 		resolve(clientObj);
 	});
@@ -201,7 +219,7 @@ function rndrQR(client) {
 
 function rndrPDF(client, qrCode, ovner) {
 	return new Promise((resolve, reject) => {
-		// console.log('client - ', client)
+		console.log("client - ", client);
 		let birthDate = add0(Number(client.birthDate[0])) + "." + add0(Number(client.birthDate[1])) + "." + add0(Number(client.birthDate[2]));
 		let birthMonth = Number(client.birthDate[1]);
 		let birthYear = Number(client.birthDate[2]);
@@ -263,21 +281,80 @@ function rndrPDF(client, qrCode, ovner) {
 		doc.setFontSize(16.5);
 		doc.setFont("e-ukrainebd", "normal");
 		doc.setTextColor(44, 43, 38);
-		doc.text("Основи міжнародного гуманітарного права", 86, 486, null, null, "left");
+		// doc.text(client.theTitle, 86, 486, null, null, "left");
+		// doc.text("Im line number1\r\nAnd Im line number2", 86, 486, null, null, "left");
+		let theTitle = client.theTitle;
+		let theTitleArr = theTitle.split(" ");
+		let theTitleLength = 0;
+		let theTitleTxt1 = "";
+		let theTitleTxt2 = "";
+		for (let i = 0; i < theTitleArr.length; i++) {
+			theTitleLength = theTitleLength + theTitleArr[i].length;
+			// console.log(theTitleLength);
+			if (theTitleLength < 38) {
+				theTitleTxt1 = theTitleTxt1 + theTitleArr[i] + " ";
+			} else {
+				theTitleTxt2 = theTitleTxt2 + theTitleArr[i] + " ";
+			}
+			// theTitleTxt = theTitleTxt + theTitleArr[i] + " ";
+			// console.log(theTitleTxt1);
+		}
+		if (theTitleTxt2.length == 0) {
+			doc.text(theTitleTxt1, 86, 487, null, null, "left");
+		} else {
+			doc.text(theTitleTxt1, 86, 487, null, null, "left");
+			doc.text(theTitleTxt2, 86, 508, null, null, "left");
+		}
 
+		// var splitFooter = doc.splitTextToSize(client.theTitle, 450, 200, 200); // used to wrap the description content
+		// doc.text(splitFooter, 86, 486);
+		let descOffset = 0;
+		if (theTitleTxt2.length > 0) {
+			descOffset = 20;
+		}
 		doc.setFontSize(12);
 		doc.setFont("e-ukraine", "normal");
 		doc.setTextColor(90, 89, 82);
-		doc.text("Автор: Міністерство оборони України", 86, 510, null, null, "left");
+		let autorTxt = client.courseAutor;
+		let autorTxtArr = autorTxt.split(" ");
+		let autorTxtLength = 0;
+		let autorTxt1 = "";
+		let autorTxt2 = "";
+		if (autorTxt.length > 0) {
+			for (let i = 0; i < autorTxtArr.length; i++) {
+				autorTxtLength = autorTxtLength + autorTxtArr[i].length;
+				if (autorTxtLength < 45) {
+					autorTxt1 = autorTxt1 + autorTxtArr[i] + " ";
+				} else {
+					autorTxt2 = autorTxt2 + autorTxtArr[i] + " ";
+				}
+			}
+			if (autorTxt2.length == 0) {
+				doc.text(`Автор: ${autorTxt1}`, 86, 510 + descOffset, null, null, "left");
+			} else {
+				doc.text(`Автор: ${autorTxt1}`, 86, 510 + descOffset, null, null, "left");
+				doc.text(autorTxt2, 86, 525 + descOffset, null, null, "left");
+				descOffset = descOffset + 15;
+			}
+		}
+		// doc.text(`Автор: ${client.courseAutor}`, 86, 510 + descOffset, null, null, "left");
 
 		doc.setLineWidth(0.5);
-		doc.line(86, 537, 510, 537);
+		doc.line(86, 537 + descOffset, 510, 537 + descOffset);
 
 		doc.setFontSize(12);
 		doc.setFont("e-ukraine", "normal");
 		doc.setTextColor(90, 89, 82);
-		doc.text("Загальне навантаження 3 год 10 хв  •  Складено іспит", 86, 572, null, null, "left");
+		doc.text(
+			`Загальне навантаження ${Number(client.courseLength.split(":")[0])} год ${Number(client.courseLength.split(":")[1])} хв  •  Складено іспит`,
+			86,
+			572 + descOffset,
+			null,
+			null,
+			"left"
+		);
 
+		/////////FOOTER////////////////
 		doc.setLineWidth(0.5);
 		doc.line(86, 692, 510, 692);
 
@@ -298,6 +375,14 @@ function rndrPDF(client, qrCode, ovner) {
 		doc.text("Збройних Сил", 312, 744, null, null, "left");
 		doc.text("України", 312, 760, null, null, "left");
 
+		const properties = {
+			title: "Сертифікат",
+			keywords: "generation=" + crypto.randomUUID(),
+			producer: "Армія+",
+			creator: "Армія+",
+		};
+
+		doc.setProperties(properties);
 		// doc.text("Laboratory Kyiv", 560, 60, null, null, "right");
 		// doc.setFontSize(9);
 		// doc.setFont("volia");
@@ -432,11 +517,9 @@ function rndrPDF(client, qrCode, ovner) {
 		//////////////////////////////////////////////////////////
 
 		if (ovner) {
-			doc.save(
-				`2601227${orderNo}-${decodeURIComponent(client.lastName)}.${decodeURIComponent([...client.firstName][0])}.${decodeURIComponent(
-					[...client.secondName][0]
-				)}.-${orderDate.split(" ")[0]}.pdf`
-			);
+			let pdfName = theTitle.split(".").join("");
+			pdfName = pdfName.split(" ").join("_");
+			doc.save(`Сертифікат_до_курсу_${pdfName}.pdf`);
 		} else {
 			// window.location.href =
 			// document.querySelector("#pdfLink").href = URL.createObjectURL(doc.output("blob"));
